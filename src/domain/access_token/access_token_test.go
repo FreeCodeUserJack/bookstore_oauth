@@ -12,10 +12,10 @@ func TestAccessTokenConstants(t *testing.T) {
 }
 
 func TestGetNewAccessToken(t *testing.T) {
-	at := GetNewAccessToken()
+	at := GetNewAccessToken(1)
 
-	if at == nil {
-		t.Fatal("expected not nil token but got nil")
+	if at.UserId != 1 {
+		t.Fatal("expected not nil token but got 0 value for UserId")
 	}
 
 	if at.IsExpired() {
