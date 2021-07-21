@@ -37,7 +37,7 @@ func (s *service) Create(request access_token.AccessTokenRequest) (*access_token
 		return nil, err
 	}
 
-	user, err := s.restUsersRepo.LoginUser(request.Email, request.Password)
+	user, err := s.restUsersRepo.LoginUser(request.Username, request.Password)
 	if err != nil {
 		return nil, err
 	}

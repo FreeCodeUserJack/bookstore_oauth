@@ -12,6 +12,8 @@ import (
 
 const (
 	expirationTime = 24
+	grantTypePassword = "password"
+	grantTypeClientCredentials = "client_credentials"
 )
 
 type AccessToken struct {
@@ -22,15 +24,32 @@ type AccessToken struct {
 }
 
 type AccessTokenRequest struct {
-	Email    string `json:"email"`
+	GrantType string `json:"grant_type"`
+	// used for password grant_type
+	Username    string `json:"username"`
 	Password string `json:"password"`
+
+	// used for client_crdentials grant_type
+	ClientId string `json:"client_id"`
+	ClientSecret string `json:"client_secret"`
+
+	Scope string `json:"scope"`
 }
 
 func (a *AccessTokenRequest) IsValid() *errors.RestError {
-	a.Email = strings.TrimSpace(a.Email)
+	switch a.GrantType {
+	case grantTypePassword:
+		break
+	case grantTypeClientCredentials:
+		break
+	default:
+		return errors.NewBadRequestError("invalid grant type parameter", "bad request")
+	}
+
+	a.Username = strings.TrimSpace(a.Username)
 	a.Password = strings.TrimSpace(a.Password)
 
-	if a.Email == "" || a.Password == "" {
+	if a.Username == "" || a.Password == "" {
 		return errors.NewBadRequestError("invalid credentials", "bad request")
 	}
 
