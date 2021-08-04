@@ -6,7 +6,7 @@ import (
 
 	access_token_domain "github.com/FreeCodeUserJack/bookstore_oauth/src/domain/access_token"
 	"github.com/FreeCodeUserJack/bookstore_oauth/src/services/access_token"
-	"github.com/FreeCodeUserJack/bookstore_oauth/src/utils/errors"
+	"github.com/FreeCodeUserJack/bookstore_utils/rest_errors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -32,7 +32,7 @@ func (a *accessTokenHandler) GetById(c *gin.Context) {
 	accessToken, err := a.service.GetById(accessTokenId)
 
 	if err != nil {
-		c.JSON(err.Status, err)
+		c.JSON(err.Status(), err)
 		return
 	}
 
@@ -42,14 +42,14 @@ func (a *accessTokenHandler) GetById(c *gin.Context) {
 func (a *accessTokenHandler) Create(c *gin.Context) {
 	var at access_token_domain.AccessTokenRequest
 	if err := c.ShouldBindJSON(&at); err != nil {
-		restErr := errors.NewBadRequestError("invalid json body", "bad request")
-		c.JSON(restErr.Status, restErr)
+		restErr := rest_errors.NewBadRequestError("invalid json body")
+		c.JSON(restErr.Status(), restErr)
 		return
 	}
 
 	accessToken, err := a.service.Create(at)
 	if err != nil {
-		c.JSON(err.Status, err)
+		c.JSON(err.Status(), err)
 		return
 	}
 

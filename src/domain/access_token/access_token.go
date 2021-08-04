@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/FreeCodeUserJack/bookstore_oauth/src/utils/crypto_utils"
-	"github.com/FreeCodeUserJack/bookstore_oauth/src/utils/errors"
+	"github.com/FreeCodeUserJack/bookstore_utils/rest_errors"
 )
 
 
@@ -36,39 +36,39 @@ type AccessTokenRequest struct {
 	Scope string `json:"scope"`
 }
 
-func (a *AccessTokenRequest) IsValid() *errors.RestError {
+func (a *AccessTokenRequest) IsValid() rest_errors.RestError {
 	switch a.GrantType {
 	case grantTypePassword:
 		break
 	case grantTypeClientCredentials:
 		break
 	default:
-		return errors.NewBadRequestError("invalid grant type parameter", "bad request")
+		return rest_errors.NewBadRequestError("invalid grant type parameter")
 	}
 
 	a.Username = strings.TrimSpace(a.Username)
 	a.Password = strings.TrimSpace(a.Password)
 
 	if a.Username == "" || a.Password == "" {
-		return errors.NewBadRequestError("invalid credentials", "bad request")
+		return rest_errors.NewBadRequestError("invalid credentials")
 	}
 
 	return nil
 }
 
-func (a *AccessToken) IsValid() *errors.RestError {
+func (a *AccessToken) IsValid() rest_errors.RestError {
 	a.AccessToken = strings.TrimSpace(a.AccessToken)
 	if a.AccessToken == "" {
-		return errors.NewBadRequestError("invalid access token id", "bad request")
+		return rest_errors.NewBadRequestError("invalid access token id")
 	}
 	if a.UserId <= 0 {
-		return errors.NewBadRequestError("invalid user id", "bad request")
+		return rest_errors.NewBadRequestError("invalid user id")
 	}
 	if a.ClientId <= 0 {
-		return errors.NewBadRequestError("invalid client id", "bad request")
+		return rest_errors.NewBadRequestError("invalid client id")
 	}
 	if a.Expires <= 0 {
-		return errors.NewBadRequestError("invalid expiration time", "bad request") 
+		return rest_errors.NewBadRequestError("invalid expiration time") 
 	}
 	return nil
 }
